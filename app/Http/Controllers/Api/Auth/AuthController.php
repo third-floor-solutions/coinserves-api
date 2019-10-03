@@ -44,7 +44,8 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return new UserResource(auth()->user());
+        $sample = new UserResource(auth()->user());
+        return response()->json($sample);
     }
 
     /**
@@ -83,8 +84,6 @@ class AuthController extends Controller
         $user->access_token = $token;
         $user->token_type = 'bearer';
         $user->expires_in = auth()->factory()->getTTL() * 60;
-        return response()->json([
-            'user' => $user
-        ]);
+        return response()->json($user);
     } 
 }

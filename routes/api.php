@@ -22,7 +22,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::get('me', 'AuthController@me');
     });
-    Route::namespace('Blog')->prefix('blog')->group(function(){
+    Route::namespace('Blog')->group(function(){
         Route::post('blog', 'BlogController@blogpost');
     });
 });
