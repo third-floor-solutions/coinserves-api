@@ -57,4 +57,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function getFullNameAttritbute(){
+        return $this->attributes['full_name'] = $this->name . $this->email;
+    }
+
+    protected $appends = ['full_name'];
 }
