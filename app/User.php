@@ -6,18 +6,20 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
-
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'display_name', 'user_type', 'email', 'password',
     ];
 
     /**
@@ -58,9 +60,23 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function getFullNameAttritbute(){
-        return $this->attributes['full_name'] = $this->name . $this->email;
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($post) {
+            $post->{$post->getKeyName()} = (string) Str::uuid();
+        });
     }
 
-    protected $appends = ['full_name'];
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
 }
