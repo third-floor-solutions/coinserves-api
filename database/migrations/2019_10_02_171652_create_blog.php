@@ -17,6 +17,11 @@ class CreateBlog extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('content');
+            $table->string('type')->default('story');
+            $table->string('poster_id')->nullable();
+            $table->string('update_poster_id')->nullable();
+            $table->unsignedTinyInteger('order')->default(0);
+            $table->boolean('show')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

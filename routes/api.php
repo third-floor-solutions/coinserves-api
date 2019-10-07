@@ -23,7 +23,15 @@ Route::middleware('api')->namespace('Api')->group(function() {
         Route::get('me', 'AuthController@me');
     });
     Route::namespace('Blog')->group(function(){
-        Route::post('blog', 'BlogController@blogpost');
+        Route::get('blogs', 'BlogController@getAllBlogs');
+        Route::get('archivedBlogs', 'BlogController@getAllArchivedBlogs');
+
+        Route::post('blog', 'BlogController@blogPost');
+        Route::post('updateBlog/{id}', 'BlogController@blogUpdate');
+        Route::post('restoreBlog/{id}', 'BlogController@blogRestore');
+
+        Route::delete('deleteBlog/{id}', 'BlogController@blogDelete');
+        
     });
 });
  
