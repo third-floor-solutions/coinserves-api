@@ -7,36 +7,31 @@ use App\Http\Requests\Api\Blog\BlogRequest;
 use Illuminate\Http\Request;
 use App\Model\User;
 use App\Model\Blog;
+use App\Repository\BlogRepository;
+
 class BlogController extends Controller
 {
+    protected $repository;
     //
 /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(BlogRepository $repository)
     {
         $this->middleware('auth');
         $this->middleware('isAdmin',['only'=> ['blogDelete']]);
+        $this->repository = $repository;
     }
 
     public function blogPost(BlogRequest $request)
     {
-        $user = auth()->user();
-        // $blog = new Blog();
-        // $blog->title = $request->title;
-        // $blog->content = $request->content;
-        // if($request->type){
-        //     $blog->type = $request->type;
-        // }
-        // $blog->poster_id = $user->id;
-        // $blog->save(); 
-
-        $blog = Blog::create($request->all());
-
-        $blog = $blog::where('id', $blog->id)->first();
-        $blog->user = $user::where('id', $blog->poster_id)->first();
+        $this->validate(request(), [
+            "title" => "required",
+            "content" => "required"
+        ]);
+        $blog = $this->repository->create(request()->all());
         return response()->json($blog);
     }
 
@@ -45,29 +40,18 @@ class BlogController extends Controller
      */
     public function blogUpdate(BlogRequest $request, $id)
     {
-        $user = auth()->user();
-        $userTable = new User();
-        // $blogTable = new Blog();
-        // $blog = $blogTable::find( $id );
-        // $blog->title = $request->title;
-        // $blog->content = $request->content;
-        // if($request->type){
-        //     $blog->type = $request->type;
-        // }
-        // $blog->update_poster_id = $user->id;
-        // $blog->save();
-        $blog = Blog::findOrFail($id);
-        $blog->update(request()->all());
-        
-        $blog->user = $userTable::where('id', $blog->poster_id)->first();
-        $blog->update_user = $userTable::where('id', $blog->update_poster_id)->first();
+        $this->validate(request(), [
+            "title" => "required",
+            "content" => "required"
+        ]);
+        $blog = $this->repository->update($id, request()->all());
         return response()->json($blog);        
     }
 
     public function blogDelete(Request $request, $id)
     {
         $blogTable = new Blog();
-        $blog = $blogTable::find( $id );
+        $blog = $blogTable::findOrFail( $id );
         if($blog){
             $blog->delete();
         }else{
@@ -80,7 +64,7 @@ class BlogController extends Controller
     {
         $blogTable = new Blog();
         $blog = $blogTable::onlyTrashed()
-                ->find( $id );
+                ->findOrFail( $id );
         if($blog){
             $blog->restore();
         }else{
@@ -96,7 +80,7 @@ class BlogController extends Controller
             // "desc" => "required|int"
         ]);
         $blogsOrder = request("desc", 0);
-        $Allblogs = Blog::orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
+        $Allblogs = Blog::with(['creator','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
         return response()->json($Allblogs);
     }
 

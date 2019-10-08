@@ -19,9 +19,22 @@ class Blog extends Model
         'title', 'content', 'type'
     ];
 
-    /*************************************
-        MUTATORS
-    *************************************/
+    /******************************************
+     * MUTATORS
+     ******************************************/
+
+    // public function setCreatedByAttribute() {
+    //     $user = auth()->user();
+    //     if(!is_null($user))
+    //         $this->attributes["created_by"] = $user->id;
+    // }
+
+    // public function setUpdatedByAttribute() {
+    //     $user = auth()->user();
+    //     if(!is_null($user))
+    //         $this->attributes["updated_by"] = $user->id;
+    // }
+
 
     protected static function boot()
     {
@@ -32,6 +45,19 @@ class Blog extends Model
 
             if(!isset($post->type))
                 $post->type = "story";
+
+            $user = auth()->user();
+            if(!is_null($user)) {
+                $post->created_by = $user->id;
+                $post->updated_by = $user->id;
+            }
+        });
+
+        static::updating(function ($post) {
+            $user = auth()->user();
+            if(!is_null($user)) {
+                $post->updated_by = $user->id;
+            }
         });
     }
 
@@ -43,5 +69,13 @@ class Blog extends Model
     public function getKeyType()
     {
         return 'string';
+    }
+
+    public function creator(){
+        return $this->belongsTo(User::class,'created_by');
+    }
+
+    public function updatedBy(){
+        return $this->belongsTo(User::class,'updated_by');
     }
 }

@@ -18,12 +18,24 @@ class CreateBlog extends Migration
             $table->string('title');
             $table->string('content');
             $table->string('type')->default('story');
-            $table->string('poster_id')->nullable();
-            $table->string('update_poster_id')->nullable();
+            $table->string('created_by');
+            $table->string('updated_by');
             $table->unsignedTinyInteger('order')->default(0);
             $table->boolean('show')->default(true);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('created_by')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreign('updated_by')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
