@@ -80,7 +80,7 @@ class BlogController extends Controller
             // "desc" => "required|int"
         ]);
         $blogsOrder = request("desc", 0);
-        $Allblogs = Blog::with(['creator','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
+        $Allblogs = Blog::with(['createdBy','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
         return response()->json($Allblogs);
     }
 

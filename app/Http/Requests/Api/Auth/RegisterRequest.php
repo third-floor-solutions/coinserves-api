@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             // 'name' => ['required', 'string', 'max:255'],
-            'wallet_address' => ['required', 'string', 'max:255', 'unique:users'],
+            'wallet_address' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'wallet_type' => ['required', 'string', 'min:2']

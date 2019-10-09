@@ -44,8 +44,9 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $sample = new UserResource(auth()->user());
-        return response()->json($sample);
+        // $sample = new UserResource(auth()->user());
+        $user = User::with(['blockchainInfo'])->findOrFail(auth()->user()->id);
+        return response()->json($user);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Model\Blockchain;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,7 @@ class RegisterController extends Controller
     public function __invoke(RegisterRequest $request)
     {
         $user = new User();
+        $blockchain = new Blockchain();
         $client = new Client([
             'base_uri' => 'https://blockchain.info/',
             'timeout'  => 5.0,
@@ -31,10 +33,13 @@ class RegisterController extends Controller
         ////Blockchain
         $response = $requestBlockChain->getBody();
         $obj = json_decode($response);
-        $user->wallet_type = $request->wallet_type;
-        $user->wallet_address = $request->wallet_address;
-        $user->initial_tx = $obj->n_tx;
-        $user->cnsrv_n_tx = $obj->n_tx;
+        $blockchain->id = $request->wallet_address;
+        $blockchain->wallet_address = $request->wallet_address;
+        $blockchain->wallet_type = $request->wallet_type;
+        $blockchain->initial_tx = $obj->n_tx;
+        $blockchain->cnsrv_n_tx = $obj->n_tx;
+        $blockchain->save(); 
+
 
         ////User Profile
         $user->email = $request->email;
@@ -43,6 +48,7 @@ class RegisterController extends Controller
         $user->last_name = $request->last_name;
         $user->display_name = $request->display_name;
         $user->user_type = request("user_type", "member");
+        $user->wallet_address = $request->wallet_address;
 
         $user->save(); 
         // Todo send mail
