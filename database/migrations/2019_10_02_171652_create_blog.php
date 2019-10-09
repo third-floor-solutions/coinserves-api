@@ -18,8 +18,8 @@ class CreateBlog extends Migration
             $table->string('title');
             $table->string('content');
             $table->string('type')->default('story');
-            $table->string('created_by');
-            $table->string('updated_by');
+            $table->uuid('created_by');
+            $table->uuid('updated_by');
             $table->unsignedTinyInteger('order')->default(0);
             $table->boolean('show')->default(true);
             $table->softDeletes();
