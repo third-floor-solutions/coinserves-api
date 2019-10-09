@@ -12,6 +12,6 @@ class Blockchain extends Model
     protected $table = 'blockchains';
     
     protected $fillable = [
-        'initial_tx', 'cnsrv_n_tx', 'wallet_address'
+        'cnsrv_n_tx'
     ];
 }

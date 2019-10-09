@@ -1,85 +1,70 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Blockchain;
 
+use App\Http\Controllers\Controller;
 use App\Model\Blockchain;
 use Illuminate\Http\Request;
 
 class BlockchainController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->middleware('auth');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function getBlockchain($wallet_address){
+        $blockchain = Blockchain::where('wallet_address',$wallet_address)->first();
+        if(!$blockchain){
+            return response()->json(['error'=>"404",'message'=>"wallet address not found"], 404);
+        }
+        return response()->json($blockchain);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function getAllBlockchain(){
+        $blockchains = Blockchain::orderBy('updated_at', "desc")->paginate(request()->input('per_page'));
+        if(!$blockchains){
+            return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
+        }
+        return response()->json($blockchains);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Blockchain  $blockchain
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Blockchain $blockchain)
-    {
-        //
+    public function getAllArchivedBlockchain(){
+        $blockchains = Blockchain::onlyTrashed()->orderBy('updated_at', "desc")->paginate(request()->input('per_page'));
+        if(!$blockchains){
+            return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
+        }
+        return response()->json($blockchains);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Blockchain  $blockchain
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Blockchain $blockchain)
-    {
-        //
+    public function updateBlockchain($wallet_address){
+        $this->validate(request(), [
+            "cnsrv_n_tx" => "required"
+        ]);
+        $blockchain = Blockchain::where('wallet_address', $wallet_address)->first();
+        if(!$blockchain){
+            return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
+        }
+        $blockchain->cnsrv_n_tx = request()->cnsrv_n_tx;
+        $blockchain->save();
+        return $blockchain->fresh();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Blockchain  $blockchain
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Blockchain $blockchain)
-    {
-        //
+    public function deleteBlockchain($wallet_address){
+        $blockchain = Blockchain::where('wallet_address', $wallet_address)->first();
+        if(!$blockchain){
+            return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
+        }
+        $blockchain->delete();
+        return $blockchain->fresh();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Blockchain  $blockchain
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Blockchain $blockchain)
-    {
-        //
+    public function restoreBlockchain($wallet_address){
+        $blockchain = Blockchain::onlyTrashed()->where('wallet_address', $wallet_address)->first();
+        if(!$blockchain){
+            return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
+        }
+        $blockchain->restore();
+        return $blockchain->fresh();
     }
 }

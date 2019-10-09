@@ -22,17 +22,30 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::get('me', 'AuthController@me');
     });
-    Route::namespace('Blog')->group(function(){
-        Route::get('blogs', 'BlogController@getAllBlogs');
-        Route::get('archivedBlogs', 'BlogController@getAllArchivedBlogs');
+    Route::namespace('Blog')->prefix('blog')->group(function(){
+        Route::get('{id}','BlogController@getBlog');
+        Route::get('all/items', 'BlogController@getAllBlogs');
+        Route::get('archived/items', 'BlogController@getAllArchivedBlogs');
 
-        Route::put('updateBlog/{id}', 'BlogController@blogUpdate');
+        Route::put('{id}', 'BlogController@blogUpdate');
 
-        Route::post('blog', 'BlogController@blogPost');
-        Route::post('restoreBlog/{id}', 'BlogController@blogRestore');
+        Route::post('create', 'BlogController@blogPost');
+        Route::post('restore/{id}', 'BlogController@blogRestore');
 
-        Route::delete('deleteBlog/{id}', 'BlogController@blogDelete');
+        Route::delete('{id}', 'BlogController@blogDelete');
         
+    });
+
+    Route::namespace('Blockchain')->prefix('blockchain')->group(function(){
+        Route::get('{wallet_address}','BlockchainController@getBlockchain');
+        Route::get('items','BlockchainController@getAllBlockchain');
+        Route::get('archived/items','BlockchainController@getAllArchivedBlockchain');
+
+        Route::put('{wallet_address}','BlockchainController@updateBlockchain');
+
+        Route::post('restore/{wallet_adress}','BlockchainController@restoreBlockchain');
+
+        Route::delete('{wallet_address}','BlockchainController@deleteBlockchain');
     });
 });
  
