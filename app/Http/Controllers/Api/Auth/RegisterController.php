@@ -25,25 +25,27 @@ class RegisterController extends Controller
         // */
         try {
             $requestBlockChain = $client->request('GET', 'rawaddr/' . $request->wallet_address . '?limit=1');
-            $response = $requestBlockChain->getBody();
-            $obj = json_decode($response);
-            $user->wallet_address = $obj->address;
-            $user->initial_tx = $obj->n_tx;
-            $user->cnsrv_n_tx = $obj->n_tx;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->display_name = $request->display_name;
-            $user->user_type = $request->user_type;
-            $user->wallet_type = $request->wallet_type;
-            $user->wallet_address = $request->wallet_address;
-            $user->save(); 
-    
-            // Todo send mail
-            return response()->json($user);
         } catch (RequestException $e) {
             return response()->json(['message' => 'Wallet not found'],500);
         }
+        ////Blockchain
+        $response = $requestBlockChain->getBody();
+        $obj = json_decode($response);
+        $user->wallet_type = $request->wallet_type;
+        $user->wallet_address = $request->wallet_address;
+        $user->initial_tx = $obj->n_tx;
+        $user->cnsrv_n_tx = $obj->n_tx;
+
+        ////User Profile
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->display_name = $request->display_name;
+        $user->user_type = request("user_type", "member");
+
+        $user->save(); 
+        // Todo send mail
+        return response()->json($user);
     }
 }
