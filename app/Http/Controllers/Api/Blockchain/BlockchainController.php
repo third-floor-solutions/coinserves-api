@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Blockchain;
 use App\Http\Controllers\Controller;
 use App\Model\Blockchain;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class BlockchainController extends Controller
 {
@@ -65,6 +67,34 @@ class BlockchainController extends Controller
             return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
         }
         $blockchain->restore();
+        return $blockchain->fresh();
+    }
+
+    public function getBlockchainTransaction($wallet_address){
+        $client = new Client([
+            'base_uri' => 'https://blockchain.info/',
+            'timeout'  => 5.0,
+        ]);
+        // /*sample wallet address
+        // *1AJbsFZ64EpEfS5UAjAfcUG8pH8Jn3rn1F
+        // *1A8JiWcwvpY7tAopUkSnGuEYHmzGYfZPiq
+        // *1MDUoxL1bGvMxhuoDYx6i11ePytECAk9QK
+        // *1Kr6QSydW9bFQG1mXiPNNu6WpJGmUa9i1g
+        // */
+        try {
+            $requestBlockChain = $client->request('GET', 'rawaddr/' . $wallet_address . '?limit=1');
+        } catch (RequestException $e) {
+            return response()->json(['message' => 'Wallet not found'],500);
+        }
+        ////Blockchain
+        $response = $requestBlockChain->getBody();
+        $obj = json_decode($response);
+        $blockchain = Blockchain::where('wallet_address', $wallet_address)->first();
+        if(!$blockchain){
+            return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
+        }
+        $blockchain->cnsrv_n_tx = $obj->n_tx;
+        $blockchain->save();
         return $blockchain->fresh();
     }
 }

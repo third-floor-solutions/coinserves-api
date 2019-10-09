@@ -40,6 +40,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
         Route::get('{wallet_address}','BlockchainController@getBlockchain');
         Route::get('items','BlockchainController@getAllBlockchain');
         Route::get('archived/items','BlockchainController@getAllArchivedBlockchain');
+        Route::get('{wallet_address}/transactions','BlockchainController@getBlockchainTransaction');
 
         Route::put('{wallet_address}','BlockchainController@updateBlockchain');
 

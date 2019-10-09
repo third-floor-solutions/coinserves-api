@@ -24,6 +24,7 @@ class RegisterController extends Controller
         // *1AJbsFZ64EpEfS5UAjAfcUG8pH8Jn3rn1F
         // *1A8JiWcwvpY7tAopUkSnGuEYHmzGYfZPiq
         // *1MDUoxL1bGvMxhuoDYx6i11ePytECAk9QK
+        // *1Kr6QSydW9bFQG1mXiPNNu6WpJGmUa9i1g
         // */
         try {
             $requestBlockChain = $client->request('GET', 'rawaddr/' . $request->wallet_address . '?limit=1');
