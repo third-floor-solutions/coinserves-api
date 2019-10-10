@@ -30,7 +30,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
         Route::put('{id}', 'BlogController@blogUpdate');
 
         Route::post('create', 'BlogController@blogPost');
-        Route::post('restore/{id}', 'BlogController@blogRestore');
+        Route::post('{id}/restore', 'BlogController@blogRestore');
 
         Route::delete('{id}', 'BlogController@blogDelete');
         
@@ -44,7 +44,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::put('{wallet_address}','BlockchainController@updateBlockchain');
 
-        Route::post('restore/{wallet_adress}','BlockchainController@restoreBlockchain');
+        Route::post('{wallet_adress}/restore','BlockchainController@restoreBlockchain');
 
         Route::delete('{wallet_address}','BlockchainController@deleteBlockchain');
     });
