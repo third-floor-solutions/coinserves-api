@@ -38,7 +38,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
     Route::namespace('Blockchain')->prefix('blockchain')->group(function(){
         Route::get('{wallet_address}','BlockchainController@getBlockchain');
-        Route::get('items','BlockchainController@getAllBlockchain');
+        Route::get('all/items','BlockchainController@getAllBlockchain');
         Route::get('archived/items','BlockchainController@getAllArchivedBlockchain');
         Route::get('{wallet_address}/transactions','BlockchainController@getBlockchainTransaction');
 
