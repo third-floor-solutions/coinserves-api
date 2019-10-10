@@ -47,6 +47,9 @@ class BlockchainController extends Controller
         if(!$blockchain){
             return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
         }
+        if(request()->initial_tx){
+            $blockchain->initial_tx = request()->initial_tx;
+        }
         $blockchain->cnsrv_n_tx = request()->cnsrv_n_tx;
         $blockchain->save();
         return $blockchain->fresh();
@@ -93,7 +96,10 @@ class BlockchainController extends Controller
         if(!$blockchain){
             return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
         }
+        $tx = $obj->n_tx - $blockchain->initial_tx;
+        $trees = floor($tx/3);
         $blockchain->cnsrv_n_tx = $obj->n_tx;
+        $blockchain->trees = $trees;
         $blockchain->save();
         return $blockchain->fresh();
     }

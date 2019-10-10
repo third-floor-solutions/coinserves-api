@@ -19,6 +19,7 @@ class CreateBlockchainsTable extends Migration
             $table->string('wallet_address')->unique();
             $table->unsignedMediumInteger('initial_tx')->default(0);
             $table->unsignedMediumInteger('cnsrv_n_tx')->default(0);
+            $table->unsignedMediumInteger('trees')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
