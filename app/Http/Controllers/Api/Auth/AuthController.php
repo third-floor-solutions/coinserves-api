@@ -44,8 +44,9 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $sample = new UserResource(auth()->user());
-        return response()->json($sample);
+        // $sample = new UserResource(auth()->user());
+        $user = User::with(['blockchainInfo'])->findOrFail(auth()->user()->id);
+        return response()->json($user);
     }
 
     /**
@@ -81,6 +82,7 @@ class AuthController extends Controller
     {
         // $user = new UserResource(auth()->user());
         $user = auth()->user();
+        $user = User::with(['blockchainInfo'])->findOrFail(auth()->user()->id);
         $user->access_token = $token;
         $user->token_type = 'bearer';
         $user->expires_in = auth()->factory()->getTTL() * 60;

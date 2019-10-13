@@ -18,10 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('display_name')->nullable();
-            $table->string('wallet_type');
-            $table->string('wallet_address');
-            $table->unsignedSmallInteger('initial_tx')->default(0);
-            $table->unsignedSmallInteger('cnsrv_n_tx')->default(0);
+            $table->string('wallet_address')->unique();
             $table->string('user_type')->default('member');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -29,6 +26,13 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('wallet_address')
+                ->references('wallet_address')
+                ->on('blockchains')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            
         });
     }
 
