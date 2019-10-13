@@ -24,6 +24,14 @@ class BlogController extends Controller
         $this->middleware('isAdmin',['only'=> ['blogDelete']]);
         $this->repository = $repository;
     }
+    public function getBlog($id)
+    {
+        $blog = Blog::where('id',$id)->first();
+        if(!$blog){
+            return response()->json(['error'=>"404",'message'=>"blog not found"], 404);
+        }
+        return response()->json($blog);
+    }
 
     public function blogPost(BlogRequest $request)
     {
@@ -50,8 +58,7 @@ class BlogController extends Controller
 
     public function blogDelete(Request $request, $id)
     {
-        $blogTable = new Blog();
-        $blog = $blogTable::findOrFail( $id );
+        $blog = Blog::findOrFail( $id );
         if($blog){
             $blog->delete();
         }else{
@@ -62,8 +69,7 @@ class BlogController extends Controller
 
     public function blogRestore(Request $request, $id)
     {
-        $blogTable = new Blog();
-        $blog = $blogTable::onlyTrashed()
+        $blog = Blog::onlyTrashed()
                 ->findOrFail( $id );
         if($blog){
             $blog->restore();
@@ -80,7 +86,7 @@ class BlogController extends Controller
             // "desc" => "required|int"
         ]);
         $blogsOrder = request("desc", 0);
-        $Allblogs = Blog::with(['creator','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
+        $Allblogs = Blog::with(['createdBy','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
         return response()->json($Allblogs);
     }
 

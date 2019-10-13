@@ -71,7 +71,7 @@ class Blog extends Model
         return 'string';
     }
 
-    public function creator(){
+    public function createdBy(){
         return $this->belongsTo(User::class,'created_by');
     }
 

@@ -2,17 +2,20 @@
 
 namespace App\Model;
 
+use App\Model\Blockchain;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Model\Traits\OrderPaginate;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use SoftDeletes;
+    use OrderPaginate;
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'first_name', 'last_name', 'display_name', 'user_type',
-        'email', 'password', 'wallet_type', 'wallet_address'
+        'email', 'wallet_address'
     ];
 
     /**
@@ -40,6 +43,12 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // protected $appends = ['blockchain'];
+    
+    // public function getBlockchainAttribute(){
+    //     return $this->blockchainInfo()->first();
+    // }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -80,4 +89,8 @@ class User extends Authenticatable implements JWTSubject
         return 'string';
     }
 
+    public function blockchainInfo()
+    {
+        return $this->belongsTo(Blockchain::class,'wallet_address','wallet_address');
+    }
 }
