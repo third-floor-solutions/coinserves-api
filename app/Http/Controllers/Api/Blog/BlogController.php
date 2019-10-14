@@ -20,7 +20,7 @@ class BlogController extends Controller
      */
     public function __construct(BlogRepository $repository)
     {
-        $this->middleware('auth');
+        $this->middleware('auth',['except' => ['getAllBlogs']]);
         $this->middleware('isAdmin',['only'=> ['blogDelete']]);
         $this->repository = $repository;
     }
