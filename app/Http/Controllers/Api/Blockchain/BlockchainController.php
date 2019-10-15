@@ -7,6 +7,7 @@ use App\Model\Blockchain;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\DB;
 
 class BlockchainController extends Controller
 {
@@ -90,9 +91,13 @@ class BlockchainController extends Controller
             return response()->json(['message' => 'Wallet not found'],500);
         }
         ////Blockchain
+        ///need change
         $response = $requestBlockChain->getBody();
         $obj = json_decode($response);
-        $blockchain = Blockchain::where('wallet_address', $wallet_address)->first();
+
+        $blockchain = Blockchain::select(DB::raw('ABS(SUM(cnsrv_n_tx) - SUM(initial_tx)) AS total_tx'))->where('user_id', auth()->user()->id)->first();
+
+        return response()->json($blockchain->total_tx);
         if(!$blockchain){
             return response()->json(['error'=>"404",'message'=>"wallet address not found"],404);
         }
