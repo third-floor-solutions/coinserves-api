@@ -23,6 +23,12 @@ class CreateBlockchainsTable extends Migration
             $table->string('user_id');
             $table->softDeletes();
             $table->timestamps();
+            
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
     }
 

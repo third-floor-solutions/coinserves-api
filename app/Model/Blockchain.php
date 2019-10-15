@@ -26,4 +26,8 @@ class Blockchain extends Model
             'wallet_address' => ['required', 'string', 'max:255', 'unique:blockchains']
         ];
     }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

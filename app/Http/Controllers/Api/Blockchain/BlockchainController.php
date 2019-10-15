@@ -46,7 +46,9 @@ class BlockchainController extends Controller
     }
 
     public function getAllBlockchain(){
-        $blockchains = Blockchain::orderBy('updated_at', "desc")->paginate(request()->input('per_page'));
+        $blockchains = Blockchain::with(['user'])
+            ->orderBy('updated_at', "desc")
+            ->paginate(request()->input('per_page'));
         if(!$blockchains){
             return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
         }
@@ -54,7 +56,10 @@ class BlockchainController extends Controller
     }
 
     public function getAllArchivedBlockchain(){
-        $blockchains = Blockchain::onlyTrashed()->orderBy('updated_at', "desc")->paginate(request()->input('per_page'));
+        $blockchains = Blockchain::with(['user'])
+            ->onlyTrashed()
+            ->orderBy('updated_at', "desc")
+            ->paginate(request()->input('per_page'));
         if(!$blockchains){
             return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
         }
