@@ -15,10 +15,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
+            $table->string('username')->unique();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('display_name')->nullable();
-            $table->string('wallet_address')->unique();
             $table->string('user_type')->default('member');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -26,13 +26,6 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('wallet_address')
-                ->references('wallet_address')
-                ->on('blockchains')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            
         });
     }
 

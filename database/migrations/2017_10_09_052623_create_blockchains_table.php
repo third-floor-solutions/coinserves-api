@@ -14,14 +14,21 @@ class CreateBlockchainsTable extends Migration
     public function up()
     {
         Schema::create('blockchains', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->bigIncrements('id');
             $table->string('wallet_type')->default('bitcoin');
             $table->string('wallet_address')->unique();
             $table->unsignedMediumInteger('initial_tx')->default(0);
             $table->unsignedMediumInteger('cnsrv_n_tx')->default(0);
             $table->unsignedMediumInteger('trees')->default(0);
+            $table->string('user_id');
             $table->softDeletes();
             $table->timestamps();
+            
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
     }
 
