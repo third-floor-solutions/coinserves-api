@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'first_name', 'last_name', 'display_name', 'user_type',
-        'email', 'wallet_address'
+        'email', 'username', 'wallet_address'
     ];
 
     /**
@@ -89,8 +89,4 @@ class User extends Authenticatable implements JWTSubject
         return 'string';
     }
 
-    public function blockchainInfo()
-    {
-        return $this->belongsTo(Blockchain::class,'wallet_address','wallet_address');
-    }
 }

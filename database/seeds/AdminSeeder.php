@@ -13,18 +13,19 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('blockchains')->insert([
-            'wallet_address'=>'1234',
-            'id'=>'1234'
-        ]);
-
         DB::table('users')->insert([
             'id' => 'a651af52-cca5-477e-8d0b-6e176f24beca',
             'email' => 'thirdfloor.solutions@gmail.com',
+            'username' => 'admin',
             'display_name' => 'administrator',
             'user_type' => 'admin',
-            'wallet_address' => '1234',
             'password' => Hash::make('T005h0rt123!')
+        ]);
+
+        DB::table('blockchains')->insert([
+            'wallet_address'=>'1234',
+            'id'=>1,
+            'user_id'=>'a651af52-cca5-477e-8d0b-6e176f24beca'
         ]);
     }
 }

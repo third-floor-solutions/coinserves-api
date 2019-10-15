@@ -31,27 +31,28 @@ class RegisterController extends Controller
         } catch (RequestException $e) {
             return response()->json(['message' => 'Wallet not found'],500);
         }
-        ////Blockchain
-        $response = $requestBlockChain->getBody();
-        $obj = json_decode($response);
-        $blockchain->id = $request->wallet_address;
-        $blockchain->wallet_address = $request->wallet_address;
-        $blockchain->wallet_type = $request->wallet_type;
-        $blockchain->initial_tx = $obj->n_tx;
-        $blockchain->cnsrv_n_tx = $obj->n_tx;
-        $blockchain->save(); 
-
 
         ////User Profile
         $user->email = $request->email;
+        $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->display_name = $request->display_name;
         $user->user_type = request("user_type", "member");
-        $user->wallet_address = $request->wallet_address;
 
         $user->save(); 
+
+        ////Blockchain
+        $response = $requestBlockChain->getBody();
+        $obj = json_decode($response);
+        $blockchain->wallet_address = $request->wallet_address;
+        $blockchain->wallet_type = $request->wallet_type;
+        $blockchain->initial_tx = $obj->n_tx;
+        $blockchain->cnsrv_n_tx = $obj->n_tx;
+        $blockchain->user_id = $user->id;
+        $blockchain->save(); 
+
         // Todo send mail
         return response()->json($user);
     }
