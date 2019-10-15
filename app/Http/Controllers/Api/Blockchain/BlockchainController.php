@@ -21,6 +21,22 @@ class BlockchainController extends Controller
         $this->blockchainRepository = $blockchain;
     }
 
+    public function blockchainRegister(){
+        $check_wallet = $this->blockchainRepository->checkWalletAddress(request()->wallet_address);
+        if($check_wallet){
+            $blockchain = new BlockChain();
+            $blockchain->wallet_address = request()->wallet_address;
+            $blockchain->wallet_type = request()->wallet_type;
+            $blockchain->initial_tx = $check_wallet->n_tx;
+            $blockchain->cnsrv_n_tx = $check_wallet->n_tx;
+            $blockchain->user_id = auth()->user()->id;
+            $blockchain->save();
+            return $blockchain->fresh();
+        }else{
+            return response()->json(['message'=>"wallet address not found"], 404);
+        }
+    }
+
     public function getBlockchain($wallet_address){
         $blockchain = Blockchain::where('wallet_address',$wallet_address)->first();
         if(!$blockchain){

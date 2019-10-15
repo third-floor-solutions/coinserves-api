@@ -45,6 +45,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::put('{wallet_address}','BlockchainController@updateBlockchain');
 
+        Route::post('register', 'BlockchainController@blockchainRegister');
         Route::post('{wallet_adress}/restore','BlockchainController@restoreBlockchain');
 
         Route::delete('{wallet_address}','BlockchainController@deleteBlockchain');

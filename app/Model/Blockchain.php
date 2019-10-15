@@ -14,4 +14,16 @@ class Blockchain extends Model
     protected $fillable = [
         'cnsrv_n_tx'
     ];
+
+        /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'wallet_address' => ['required', 'string', 'max:255', 'unique:blockchains']
+        ];
+    }
 }

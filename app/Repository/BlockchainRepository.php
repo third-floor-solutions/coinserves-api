@@ -34,6 +34,25 @@ class BlockchainRepository extends Repository
     return $blog->fresh();
   }
 
+  public function checkWalletAddress($wallet_address){
+    $client = new Client([
+      'base_uri' => 'https://blockchain.info/',
+      'timeout'  => 5.0,
+    ]);
+    try {
+        $requestBlockChain = $client->request('GET', 'rawaddr/' . $wallet_address . '?limit=0');
+    } catch (RequestException $e) {
+        return null;
+    }
+    $response = $requestBlockChain->getBody();
+    $obj = json_decode($response);
+    
+    $blockchain = new Blockchain();
+    $blockchain->n_tx = $obj->n_tx;
+    $blockchain->address = $obj->address;
+    return $blockchain;
+  }
+
   public function getTransactions($wallet_address){
     $client = new Client([
       'base_uri' => 'https://blockchain.info/',
