@@ -81,22 +81,33 @@ class BlogController extends Controller
 
     public function getAllBlogs(Request $request)
     {   
-        $this->validate(request(), [
-            "desc" => "int"
-            // "desc" => "required|int"
-        ]);
-        $blogsOrder = request("desc", 0);
-        $Allblogs = Blog::with(['createdBy','updatedBy'])->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
+        $order_by = explode(":",request("order_by", "updated_at:desc"));
+        $where = explode(":",request("where", "type:story"));
+
+        $Allblogs = Blog::with(['createdBy','updatedBy'])
+            ->where($where[0],'like', '%' . $where[1])
+            ->where($where[0],'like', $where[1] . '%')
+            ->orderBy($order_by[0], count($order_by) != 2 ? "desc" : $order_by[1])
+            ->paginate(request()->input('per_page'));
+
         return response()->json($Allblogs);
     }
 
     public function getAllArchivedBlogs(Request $request)
     {   
-        $this->validate(request(), [
-            "desc" => "int"
-        ]);
+        // $this->validate(request(), [
+        //     "desc" => "int"
+        // ]);
+        $order_by = explode(":",request("order_by", "updated_at:desc"));
+        $where = explode(":",request("where", "type:story"));
+        
         $blogsOrder = request("desc", 0);
-        $Allblogs = Blog::onlyTrashed()->orderPaginate('updated_at', $blogsOrder ? "desc" : "asc", $request->input('per_page'));
+        $Allblogs = Blog::onlyTrashed()
+            ->where($where[0],'like', '%' . $where[1])
+            ->where($where[0],'like', $where[1] . '%')            
+            ->orderBy($order_by[0], count($order_by) != 2 ? "desc" : $order_by[1])
+            ->paginate(request()->input('per_page'));
+
         return response()->json($Allblogs);
     }
 }

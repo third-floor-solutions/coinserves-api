@@ -46,8 +46,14 @@ class BlockchainController extends Controller
     }
 
     public function getAllBlockchain(){
+        $order_by = explode(":",request("order_by", "updated_at:desc"));
+        $where = explode(":",request("where", "wallet_type:bitcoin"));
+
         $blockchains = Blockchain::with(['user'])
-            ->orderBy('updated_at', "desc")
+            ->where($where[0],'like', '%' . $where[1])
+            ->where($where[0],'like', $where[1] . '%')
+            ->orderBy($order_by[0], $order_by[1])
+            ->orderBy($order_by[0], count($order_by) != 2 ? "desc" : $order_by[1])
             ->paginate(request()->input('per_page'));
         if(!$blockchains){
             return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
@@ -56,9 +62,15 @@ class BlockchainController extends Controller
     }
 
     public function getAllArchivedBlockchain(){
+        $order_by = explode(":",request("order_by", "updated_at:desc"));
+        $where = explode(":",request("where", "wallet_type:bitcoin"));
+
         $blockchains = Blockchain::with(['user'])
-            ->onlyTrashed()
-            ->orderBy('updated_at', "desc")
+            ->where($where[0],'like', '%' . $where[1])
+            ->where($where[0],'like', $where[1] . '%')
+            ->onlyTrashed()            
+            ->orderBy($order_by[0], $order_by[1])
+            ->orderBy($order_by[0], count($order_by) != 2 ? "desc" : $order_by[1])
             ->paginate(request()->input('per_page'));
         if(!$blockchains){
             return response()->json(['error'=>"404",'message'=>"no wallet address found"], 404);
