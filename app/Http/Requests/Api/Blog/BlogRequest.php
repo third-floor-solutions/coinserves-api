@@ -25,7 +25,7 @@ class BlogRequest extends FormRequest
     {
         return [ 
             'title' => ['required', 'string'],
-            'content' => ['required', 'string'],
+            'content' => ['required', 'string', 'max:16777214'],
         ];
     }
 }

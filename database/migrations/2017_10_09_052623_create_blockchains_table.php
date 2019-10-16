@@ -17,6 +17,7 @@ class CreateBlockchainsTable extends Migration
             $table->bigIncrements('id');
             $table->string('wallet_type')->default('bitcoin');
             $table->string('wallet_address')->unique();
+            $table->string('status')->default('Unverified');
             $table->unsignedMediumInteger('initial_tx')->default(0);
             $table->unsignedMediumInteger('cnsrv_n_tx')->default(0);
             $table->unsignedMediumInteger('trees')->default(0);

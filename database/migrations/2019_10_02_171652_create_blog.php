@@ -16,7 +16,7 @@ class CreateBlog extends Migration
         Schema::create('blogs', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
-            $table->string('content');
+            $table->mediumText('content');
             $table->string('type')->default('story');
             $table->uuid('created_by');
             $table->uuid('updated_by');
