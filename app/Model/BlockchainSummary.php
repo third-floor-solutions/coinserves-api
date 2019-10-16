@@ -8,6 +8,6 @@ use App\Model\Blockchain;
 class BlockchainSummary extends Model
 {
   protected $fillable = [
-      'trees', 'tress_to_plant', 'trees_planted', 'trees_funded'
+    'tress_to_plant', 'trees_planted', 'trees_funded'
   ];
 }
