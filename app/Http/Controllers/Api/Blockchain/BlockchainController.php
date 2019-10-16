@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Blockchain;
 use App\Http\Controllers\Controller;
 use App\Model\Blockchain;
 use App\Model\BlockchainResult;
+use App\Model\BlockchainSummary;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;

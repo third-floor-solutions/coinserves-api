@@ -58,5 +58,12 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::delete('{wallet_address}','BlockchainController@deleteBlockchain');
     });
+
+    Route::namespace('Summary')->prefix('summary')->group(function(){
+        Route::get('all/items/trees', 'BlockchainSummaryController@getSummaryTrees');
+
+        Route::put('trees', 'BlockchainSummaryController@updateSummaryTrees');
+
+    });
 });
  
