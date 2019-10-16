@@ -22,6 +22,14 @@ Route::middleware('api')->namespace('Api')->group(function() {
 
         Route::get('me', 'AuthController@me');
     });
+
+    Route::namespace('User')->prefix('user')->group(function(){
+        Route::get('{id}', 'UserController@getUser');
+        Route::get('all/items', 'UserController@getAllUsers');
+
+        Route::put('{id}', 'UserController@userUpdate');
+    });
+
     Route::namespace('Blog')->prefix('blog')->group(function(){
         Route::get('{id}','BlogController@getBlog');
         Route::get('all/items', 'BlogController@getAllBlogs');
