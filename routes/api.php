@@ -63,7 +63,12 @@ Route::middleware('api')->namespace('Api')->group(function() {
         Route::get('all/items/trees', 'BlockchainSummaryController@getSummaryTrees');
 
         Route::put('trees', 'BlockchainSummaryController@updateSummaryTrees');
+    });
 
+    Route::namespace('Newsletter')->prefix('newsletter')->group(function(){
+        Route::get('all/items', 'NewsletterController@getAllNewsletter');
+
+        Route::post('create', 'NewsletterController@createNewsletter');
     });
 });
  
