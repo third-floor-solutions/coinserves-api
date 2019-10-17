@@ -119,11 +119,12 @@ class BlockchainController extends Controller
 
     public function getBlockchainTransactionByUserId($user_id){
         $transactions = $this->blockchainRepository->getTransactionsByUserId($user_id);
-        $blockchain = Blockchain::select(DB::raw('ABS(SUM(cnsrv_n_tx) - SUM(initial_tx)) AS total_tx'))
+        // $blockchain = Blockchain::select(DB::raw('ABS(SUM(cnsrv_n_tx) - SUM(initial_tx)) AS total_tx'))
+        //         ->where('user_id', $user_id)->first();
+        $blockchain = Blockchain::select(DB::raw('SUM(trees) AS total_trees'))
                 ->where('user_id', $user_id)->first();
         $result = new BlockchainResult();
-        $result->total_tx = $blockchain->total_tx;
-        $result->trees = floor(((int)$blockchain->total_tx)/3);
+        $result->trees = (int) $blockchain->total_trees;
         $result->tx = $transactions;
 
         return response()->json($result);

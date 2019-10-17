@@ -14,19 +14,19 @@ class BlockchainSummaryController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth',['except' => ['getSummaryTrees']]);
     }
 
     public function getSummaryTrees(){
-        $blockchain = Blockchain::select(DB::raw('SUM(trees) AS total_tx'))
+        $blockchain = Blockchain::select(DB::raw('SUM(trees) AS total_trees'))
                ->first();
         $summary = BlockchainSummary::first();
         if(!$summary){
             $summary = new BlockchainSummary();
-            $summary->trees = (int) $blockchain->total_tx;
+            $summary->trees = (int) $blockchain->total_trees;
             $summary->save();
         }else{
-            $summary->trees = (int) $blockchain->total_tx;
+            $summary->trees = (int) $blockchain->total_trees;
             $summary->update();
         }
 
