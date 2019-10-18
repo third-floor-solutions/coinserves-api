@@ -18,7 +18,7 @@ class BlockchainController extends Controller
 
     public function __construct(BlockchainRepository $blockchain)
     {
-        $this->middleware('auth');
+        $this->middleware('auth',['except'=>['getAllBlockchain']]);
         $this->blockchainRepository = $blockchain;
     }
 

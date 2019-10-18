@@ -20,7 +20,7 @@ class BlogController extends Controller
      */
     public function __construct(BlogRepository $repository)
     {
-        $this->middleware('auth',['except' => ['getAllBlogs']]);
+        $this->middleware('auth',['except' => ['getAllBlogs','getBlog']]);
         $this->middleware('isAdmin',['only'=> ['blogDelete']]);
         $this->repository = $repository;
     }
@@ -103,6 +103,7 @@ class BlogController extends Controller
         
         $blogsOrder = request("desc", 0);
         $Allblogs = Blog::onlyTrashed()
+            ->with(['createdBy','updatedBy'])
             ->where($where[0],'like', '%' . $where[1])
             ->where($where[0],'like', $where[1] . '%')            
             ->orderBy($order_by[0], count($order_by) != 2 ? "desc" : $order_by[1])
