@@ -18,7 +18,7 @@ class BlockchainController extends Controller
 
     public function __construct(BlockchainRepository $blockchain)
     {
-        $this->middleware('auth',['except'=>['getAllBlockchain']]);
+        $this->middleware('auth',['except'=>['getAllBlockchain','checkWalletAddress']]);
         $this->blockchainRepository = $blockchain;
     }
 
@@ -33,6 +33,16 @@ class BlockchainController extends Controller
             $blockchain->user_id = auth()->user()->id;
             $blockchain->save();
             return $blockchain->fresh();
+        }else{
+            return response()->json(['message'=>"wallet address not found"], 404);
+        }
+    }
+
+    public function checkWalletAddress(){
+        $check_wallet = $this->blockchainRepository->checkWalletAddress(request()->wallet_address);
+        if($check_wallet){
+            return response()
+                ->json(['message'=>"valid wallet address", 'wallet_address' => request()->wallet_address]);
         }else{
             return response()->json(['message'=>"wallet address not found"], 404);
         }

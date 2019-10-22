@@ -49,6 +49,7 @@ Route::middleware('api')->namespace('Api')->group(function() {
         Route::get('all/items','BlockchainController@getAllBlockchain');
         Route::get('archived/items','BlockchainController@getAllArchivedBlockchain');
         Route::get('{wallet_address}/transactions','BlockchainController@getBlockchainTransaction');
+        Route::get('{wallet_address}/check','BlockchainController@checkWalletAddress');
         Route::get('{user_id}/user/transactions','BlockchainController@getBlockchainTransactionByUserId');
 
         Route::put('{wallet_address}','BlockchainController@updateBlockchain');
